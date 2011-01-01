@@ -6,6 +6,7 @@ function Game(){
 		canvas = doc.createElement('canvas'),
 		context = canvas.getContext('2d'),
 		math = Math,
+		aler = alert,
 		combos = [],
 		board = [],
 		undef;
@@ -43,31 +44,30 @@ function Game(){
 
 	// function called for each move
 	canvas.onclick = function(e){		
-		var i = ~~(e.pageY / size) * grid + ~~(e.pageX / size), v, next, res;		
+		var i = ~~(e.pageY / size) * grid + ~~(e.pageX / size), alpha, next, res;		
 		if (!board[i]){
 			draw(i, 'o');
-			if (chk() < 0) return alert('won!')
-			i = grid * grid
+			if (chk(0) < 0) return aler('won');
+			i = grid * grid;
 			while(i--){
 				if (!board[i]){
 					board[i] = 'x';
 					res = search(1);
 					board[i] = undef;
-					if (v === undef || res > v){
-						v = res;
+					if (alpha === undef || res > alpha){
+						alpha = res;
 						next = i;
 					}
 				}
 			}
-			if (v === undef) return alert('tie!');
+			if (alpha === undef) return aler('tie');
 			draw(next);
-			if (chk() > 0) return alert('lost!')
+			if (chk(0) > 0) return aler('lost')
 		}		
 	};
 
 	// method to check if game won
 	function chk(depth){
-		depth = depth || 0;
 		for (z in combos){
 			var combo = combos[z], j = x = o = grid, k;
 			while(j--){
@@ -86,15 +86,16 @@ function Game(){
 		y = ~~(i / grid) * size;
 		c = size / 2;
 		d = size / 3;
+		e = d * 2;
 		context.lineWidth = 4;
 		context.bn();  
 		if (o)
 			context.a(x + c, y + c, d / 2, 0, math.PI * 2);
 		else{
 			context.mT(x + d, y + d);
-			context.lT(x + d * 2, y + d * 2);
-			context.mT(x + d, y + d * 2);
-			context.lT(x + d * 2, y + d);
+			context.lT(x + e, y + e);
+			context.mT(x + d, y + e);
+			context.lT(x + e, y + d);
 		}
 		context.sk();
 		board[i] = o || 'x';
@@ -102,9 +103,9 @@ function Game(){
 	
 	// simple minimax search for best move
 	function search(depth){
-		var i = grid * grid, xo = 'x', m = 'max', v, res;
+		var i = grid * grid, xo = 'x', m = 'max', alpha, res;
 		if (res = chk(depth))
-			v = res;
+			alpha = res;
 		else{
 			if (depth % 2){
 				xo = 'o'; 
@@ -115,10 +116,10 @@ function Game(){
 					board[i] = xo;
 					res = search(depth + 1);
 					board[i] = undef;
-					v = v === undef ? res : math[m](res, v);
+					alpha = alpha === undef ? res : math[m](res, alpha);
 				}
 			}		
 		}
-		return v || 0;
+		return alpha || 0;
 	}
 }
