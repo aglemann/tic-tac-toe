@@ -19,13 +19,13 @@ function Game(){
 	// build the playing area	
 	canvas.height = canvas.width = grid * size;
 	context.strokeStyle = '#666';
-	context.bn();
-	for (i = 1; i <= (grid - 1) + (grid - 1); i++){
-		p1 = p2 = 0, p3 = p4 = grid * size;
-		if (i <= grid - 1) p1 = p3 = i * size; // horz
-		else p2 = p4 = i * size - (grid - 1) * size; // vert
-		context.mT(p1, p2);
-		context.lT(p3, p4);
+	context.bn();	
+	for (i = 1, g = grid - 1; i <= g * 2; i++){
+		a = b = 0, c = d = grid * size;
+		if (i <= g) a = c = i * size; // horz
+		else b = d = i * size - g * size; // vert
+		context.mT(a, b);
+		context.lT(c, d);
 	}
 	context.sk();
 	doc.body.appendChild(canvas);
@@ -75,18 +75,14 @@ function Game(){
 				board[k] == 'x' && x--;
 				board[k] == 'o' && o--;
 			}
-			if (!x) return 100 - depth;
-			if (!o) return depth - 100;
+			if (!x) return size - depth;
+			if (!o) return depth - size;
 		}
 	}
 
 	// method to draw shape on board
 	function draw(i, o){
-		x = i % grid * size;
-		y = ~~(i / grid) * size;
-		c = size / 2;
-		d = size / 3;
-		e = d * 2;
+		x = i % grid * size, y = ~~(i / grid) * size, c = size / 2, d = size / 3, e = d * 2;
 		context.lineWidth = 4;
 		context.bn();  
 		if (o)
