@@ -75,8 +75,8 @@ function Game(){
 				board[k] == 'x' && x--;
 				board[k] == 'o' && o--;
 			}
-			if (!x) return size - depth;
-			if (!o) return depth - size;
+			if (!x) return size - depth; // x won
+			if (!o) return depth - size; // o won
 		}
 	}
 
@@ -85,9 +85,9 @@ function Game(){
 		x = i % grid * size, y = ~~(i / grid) * size, c = size / 2, d = size / 3, e = d * 2;
 		context.lineWidth = 4;
 		context.bn();  
-		if (o)
+		if (o) // draw o
 			context.a(x + c, y + c, d / 2, 0, math.PI * 2);
-		else{
+		else{ // draw x
 			context.mT(x + d, y + d);
 			context.lT(x + e, y + e);
 			context.mT(x + d, y + e);
@@ -98,6 +98,7 @@ function Game(){
 	}
 	
 	// simple minimax search for best move
+	// http://en.wikipedia.org/wiki/Minimax
 	function search(depth){
 		var i = grid * grid, xo = 'x', m = 'max', alpha, res;
 		if (res = chk(depth))
