@@ -6,7 +6,7 @@ function Game(){
 		canvas = doc.createElement('canvas'),
 		context = canvas.getContext('2d'),
 		math = Math,
-		aler = alert,
+		boo = alert,
 		combos = [],
 		board = [],
 		undef;
@@ -47,7 +47,7 @@ function Game(){
 		var i = ~~(e.pageY / size) * grid + ~~(e.pageX / size), alpha, next, res;		
 		if (!board[i]){
 			draw(i, 'o');
-			if (chk(0) < 0) return aler('won');
+			if (chk(0) < 0) return boo('won');
 			i = grid * grid;
 			while(i--){
 				if (!board[i]){
@@ -60,9 +60,9 @@ function Game(){
 					}
 				}
 			}
-			if (alpha === undef) return aler('tie');
+			if (alpha === undef) return boo('tie');
 			draw(next);
-			if (chk(0) > 0) return aler('lost')
+			if (chk(0) > 0) return boo('lost')
 		}		
 	};
 
@@ -100,20 +100,20 @@ function Game(){
 	// simple minimax search for best move
 	// http://en.wikipedia.org/wiki/Minimax
 	function search(depth){
-		var i = grid * grid, xo = 'x', m = 'max', alpha, res;
+		var i = grid * grid, xo = 'x', method = 'max', alpha, res;
 		if (res = chk(depth))
 			alpha = res;
 		else{
-			if (depth % 2){
+			if (depth % 2){ // opponent
 				xo = 'o'; 
-				m = 'min'; 
+				method = 'min'; 
 			}
 			while(i--){
 				if (!board[i]){
 					board[i] = xo;
 					res = search(depth + 1);
 					board[i] = undef;
-					alpha = alpha === undef ? res : math[m](res, alpha);
+					alpha = alpha === undef ? res : math[method](res, alpha);
 				}
 			}		
 		}
