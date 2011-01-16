@@ -14,7 +14,6 @@ function Game(el){
 		doc = document,
 		canvas = doc.createElement('canvas'),
 		context = canvas.getContext('2d'),
-		math = Math,
 		die = alert,
 		combos = [],
 		board = [],
@@ -51,16 +50,15 @@ function Game(el){
 	}
 	combos.push(c, d);
 
-	// function called for each move
+	// method called for each move
 	canvas.onclick = function(e){
 		var rect = canvas.getBoundingClientRect(), 
-			left = rect.left + doc.body.scrollLeft, 
-			top = rect.top + doc.body.scrollTop, 
-			i = ~~((e.pageY - top) / size) * grid + ~~((e.pageX - left) / size), next;		
-		if (!board[i]){
-			draw(i, 'o');
+			move = ~~((e.pageY - rect.top + doc.body.scrollTop) / size) * grid + ~~((e.pageX - rect.left + doc.body.scrollLeft) / size), 
+			next;		
+		if (!board[move]){
+			draw(move, -1); // o = -1, x = 1
 			if (chk(0) < 0) return die('won');
-			next = search(0);
+			next = search(0, 1);
 			if (next === undef) return die('tie');		
 			draw(next);
 			if (chk(0) > 0) return die('lost')
@@ -68,13 +66,14 @@ function Game(el){
 	};
 
 	// method to check if game won
+	// uses depth to give higher values to quicker wins
 	function chk(depth){
 		for (z in combos){
-			var combo = combos[z], j = x = o = grid, k;
+			var combo = combos[z], j = x = o = grid;
 			while(j--){
 				k = combo[j];
-				board[k] == 'x' && x--;
-				board[k] == 'o' && o--;
+				board[k] == 1 && x--;
+				board[k] == -1 && o--;
 			}
 			if (!x) return size - depth; // x won
 			if (!o) return depth - size; // o won
@@ -87,7 +86,7 @@ function Game(el){
 		context.lineWidth = 4;
 		context.bn();  
 		if (o) // draw o
-			context.a(a + c, b + c, d / 2, 0, math.PI * 2);
+			context.a(a + c, b + c, d / 2, 0, Math.PI * 2);
 		else{ // draw x
 			context.mT(a + d, b + d);
 			context.lT(a + e, b + e);
@@ -95,33 +94,28 @@ function Game(el){
 			context.lT(a + e, b + d);
 		}
 		context.sk();
-		board[i] = o || 'x';
+		board[i] = o || 1;
 	}
 	
-	// minimax search
-	// http://en.wikipedia.org/wiki/Minimax
-	function search(depth){
-		var i = grid * grid, xo = 'x', method = 'max', alpha, beta, value, next;
-		if (value = chk(depth))
-			alpha = value;
-		else{
-			if (depth % 2){ // opponent
-				xo = 'o'; 
-				method = 'min'; 
-			}
-			while(i--){
-				if (!board[i]){
-					board[i] = xo;
-					value = search(depth + 1);
-					board[i] = undef;
-					alpha = alpha === undef ? value : math[method](value, alpha);
-					if (beta === undef || alpha > beta){
-						beta = alpha;
-						next = i;
-					}
+	// negamax search
+	// http://en.wikipedia.org/wiki/Negamax
+	function search(depth, player){
+		var i = grid * grid, max, beta, value, next;
+		if (value = chk(depth)) // either player won
+			return value * player;			
+		while(i--){
+			if (!board[i]){
+				board[i] = player;
+				value = -search(depth + 1, -player);
+				board[i] = undef;
+				if (max === undef || value > max)
+					max = value;
+				if (beta === undef || max > beta){
+					beta = max;
+					next = i;
 				}
-			}		
-		}
-		return depth ? alpha || 0 : next;
+			}
+		}		
+		return depth ? max || 0 : next; // 0 is tie game
 	}
 }
