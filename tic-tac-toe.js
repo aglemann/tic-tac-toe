@@ -1,3 +1,12 @@
+/*!
+ * TicTacToe
+ * Simple minimax-derivative tic-tac-toe game in about 1K of Javascript
+ * https://github.com/aglemann/tic-tac-toe
+ *
+ * Copyright 2010, Aeron Glemann (http://electricprism.com/aeron)
+ * Licensed under the MIT license
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 function Game(){
 	// make everything locals so they compress better	
 	var grid = 3,
@@ -86,8 +95,8 @@ function Game(){
 		board[i] = o || 'x';
 	}
 	
-	// negamax search
-	// http://en.wikipedia.org/wiki/Negamax
+	// minimax search
+	// http://en.wikipedia.org/wiki/Minimax
 	function search(depth){
 		var i = grid * grid, xo = 'x', method = 'max', alpha, beta, value, next;
 		if (value = chk(depth))
