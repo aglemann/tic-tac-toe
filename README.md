@@ -1,9 +1,9 @@
 Tic Tac Toe
 ===
 
-Trying to make an intelligent Tic Tac Toe game in 1K.
+Simple minimax-derivative tic-tac-toe game in about 1K of Javascript.
 
 ### TODO
 
 - Further optimization.
-- Implement alpha-beta pruning or negascout-like algorithm.
+- Add alpha-beta pruning _and_ still shave about 150 bytes.

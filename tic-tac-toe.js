@@ -12,6 +12,7 @@ function Game(el){
 	var grid = 3,
 		size = 100,
 		doc = document,
+		body = doc.body,
 		canvas = doc.createElement('canvas'),
 		context = canvas.getContext('2d'),
 		die = alert,
@@ -36,7 +37,7 @@ function Game(el){
 		context.lT(c, d);
 	}
 	context.sk();	
-	(el || doc.body).appendChild(canvas);
+	(el || body).appendChild(canvas);
 	
 	// calculate all winning combos
 	for (i = 0, c = [], d = []; i < grid; i++){
@@ -53,7 +54,7 @@ function Game(el){
 	// method called for each move
 	canvas.onclick = function(e){
 		var rect = canvas.getBoundingClientRect(), 
-			move = ~~((e.pageY - rect.top + doc.body.scrollTop) / size) * grid + ~~((e.pageX - rect.left + doc.body.scrollLeft) / size), 
+			move = ~~((e.pageY - rect.top + body.scrollTop) / size) * grid + ~~((e.pageX - rect.left + body.scrollLeft) / size), 
 			next;		
 		if (!board[move]){
 			draw(move, -1); // o = -1, x = 1
