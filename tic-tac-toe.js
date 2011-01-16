@@ -6,7 +6,7 @@ function Game(){
 		canvas = doc.createElement('canvas'),
 		context = canvas.getContext('2d'),
 		math = Math,
-		boo = alert,
+		die = alert,
 		combos = [],
 		board = [],
 		undef;
@@ -44,25 +44,14 @@ function Game(){
 
 	// function called for each move
 	canvas.onclick = function(e){		
-		var i = ~~(e.pageY / size) * grid + ~~(e.pageX / size), alpha, next, res;		
+		var i = ~~(e.pageY / size) * grid + ~~(e.pageX / size), next;		
 		if (!board[i]){
 			draw(i, 'o');
-			if (chk(0) < 0) return boo('won');
-			i = grid * grid;
-			while(i--){
-				if (!board[i]){
-					board[i] = 'x';
-					res = search(1);
-					board[i] = undef;
-					if (alpha === undef || res > alpha){
-						alpha = res;
-						next = i;
-					}
-				}
-			}
-			if (alpha === undef) return boo('tie');
+			if (chk(0) < 0) return die('won');
+			next = search(0);
+			if (next === undef) return die('tie');		
 			draw(next);
-			if (chk(0) > 0) return boo('lost')
+			if (chk(0) > 0) return die('lost')
 		}		
 	};
 
@@ -82,27 +71,27 @@ function Game(){
 
 	// method to draw shape on board
 	function draw(i, o){
-		x = i % grid * size, y = ~~(i / grid) * size, c = size / 2, d = size / 3, e = d * 2;
+		a = i % grid * size, b = ~~(i / grid) * size, c = size / 2, d = size / 3, e = d * 2;
 		context.lineWidth = 4;
 		context.bn();  
 		if (o) // draw o
-			context.a(x + c, y + c, d / 2, 0, math.PI * 2);
+			context.a(a + c, b + c, d / 2, 0, math.PI * 2);
 		else{ // draw x
-			context.mT(x + d, y + d);
-			context.lT(x + e, y + e);
-			context.mT(x + d, y + e);
-			context.lT(x + e, y + d);
+			context.mT(a + d, b + d);
+			context.lT(a + e, b + e);
+			context.mT(a + d, b + e);
+			context.lT(a + e, b + d);
 		}
 		context.sk();
 		board[i] = o || 'x';
 	}
 	
-	// simple minimax search for best move
-	// http://en.wikipedia.org/wiki/Minimax
+	// negamax search
+	// http://en.wikipedia.org/wiki/Negamax
 	function search(depth){
-		var i = grid * grid, xo = 'x', method = 'max', alpha, res;
-		if (res = chk(depth))
-			alpha = res;
+		var i = grid * grid, xo = 'x', method = 'max', alpha, beta, value, next;
+		if (value = chk(depth))
+			alpha = value;
 		else{
 			if (depth % 2){ // opponent
 				xo = 'o'; 
@@ -111,12 +100,16 @@ function Game(){
 			while(i--){
 				if (!board[i]){
 					board[i] = xo;
-					res = search(depth + 1);
+					value = search(depth + 1);
 					board[i] = undef;
-					alpha = alpha === undef ? res : math[method](res, alpha);
+					alpha = alpha === undef ? value : math[method](value, alpha);
+					if (beta === undef || alpha > beta){
+						beta = alpha;
+						next = i;
+					}
 				}
 			}		
 		}
-		return alpha || 0;
+		return depth ? alpha || 0 : next;
 	}
 }
