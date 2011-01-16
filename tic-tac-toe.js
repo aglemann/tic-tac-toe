@@ -8,9 +8,10 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 function Game(el){
-	// make everything locals so they compress better	
-	var grid = 3,
-		size = 100,
+	var grid = 3, // number of squares per row
+		size = 100, // size of each square in pixels
+		intelligence = 6, // intelligence of ai (higher numbers take longer)
+		// make everything else locals so they compress better	
 		doc = document,
 		body = doc.body,
 		canvas = doc.createElement('canvas'),
@@ -59,7 +60,7 @@ function Game(el){
 		if (!board[move]){
 			draw(move, -1); // o = -1, x = 1
 			if (chk(0) < 0) return die('won');
-			next = search(0, 1);
+			next = search(0, 1, -size, size);
 			if (next === undef) return die('tie');		
 			draw(next);
 			if (chk(0) > 0) return die('lost')
@@ -70,11 +71,11 @@ function Game(el){
 	// uses depth to give higher values to quicker wins
 	function chk(depth){
 		for (z in combos){
-			var combo = combos[z], j = x = o = grid;
+			j = x = o = grid;
 			while(j--){
-				k = combo[j];
-				board[k] == 1 && x--;
-				board[k] == -1 && o--;
+				k = combos[z][j];
+				board[k] > 0 && x--;
+				board[k] < 0 && o--;
 			}
 			if (!x) return size - depth; // x won
 			if (!o) return depth - size; // o won
@@ -98,25 +99,26 @@ function Game(el){
 		board[i] = o || 1;
 	}
 	
-	// negamax search
+	// negamax search with alpha-beta pruning
 	// http://en.wikipedia.org/wiki/Negamax
-	function search(depth, player){
-		var i = grid * grid, max, beta, value, next;
+	// http://en.wikipedia.org/wiki/Alpha-beta_pruning
+	function search(depth, player, alpha, beta){
+		var i = grid * grid, min = -size, max, value, next;
 		if (value = chk(depth)) // either player won
-			return value * player;			
-		while(i--){
-			if (!board[i]){
-				board[i] = player;
-				value = -search(depth + 1, -player);
-				board[i] = undef;
-				if (max === undef || value > max)
-					max = value;
-				if (beta === undef || max > beta){
-					beta = max;
-					next = i;
+			return value * player;
+		if (intelligence > depth){ // recursion cutoff
+			while(i--){
+				if (!board[i]){
+					board[i] = player;
+					value = -search(depth + 1, -player, -beta, -alpha);
+					board[i] = undef;
+					if (max === undef || value > max) max = value;
+					if (value > alpha) alpha = value;
+					if (alpha >= beta) return alpha; // prune branch
+					if (max > min){ min = max; next = i; } // best odds for next move
 				}
-			}
-		}		
+			}		
+		} 
 		return depth ? max || 0 : next; // 0 is tie game
 	}
 }

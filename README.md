@@ -3,7 +3,13 @@ Tic Tac Toe
 
 Simple minimax-derivative tic-tac-toe game in about 1K of Javascript.
 
-### TODO
+### Features
 
-- Further optimization.
-- Add alpha-beta pruning _and_ still shave about 150 bytes.
+- Any size grid.
+- Configurable AI (by recursion tuning).
+- Uses HTML5 browser canvas.
+- Uses alpha-beta pruning for 10x performance.
+
+### Todo
+
+- Trim another hundred bytes :)
