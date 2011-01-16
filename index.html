@@ -4,9 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
-	<title>aglemann/tic-tac-toe @ GitHub</title>
-	
+	<title>aglemann/tic-tac-toe @ GitHub</title>	
 	<style type="text/css">
 		body {
   		margin-top: 1.0em;
@@ -17,19 +15,20 @@
       margin: 0 auto;
       width: 700px;
     }
+		#game { border: 1px #666 solid; float: left; margin-top: 30px; padding: 30px; }
 		h1 { font-size: 3.8em; color: #333; margin-bottom: 3px; }
 		h1 .small { font-size: 0.4em; }
 		h1 a { text-decoration: none }
 		h2 { font-size: 1.5em; color: #333; }
     h3 { text-align: center; color: #333; }
     a { color: #333; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .description { clear: both; font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; overflow: hidden; font-style: italic;}
     .download { float: right; }
 		pre { background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
 	</style>
-	
+	<script type="text/javascript" charset="utf-8" src="https://github.com/aglemann/tic-tac-toe/raw/master/tic-tac-toe.min.js"></script>
 </head>
 
 <body>
@@ -47,8 +46,10 @@
     <h1><a href="http://github.com/aglemann/tic-tac-toe">tic-tac-toe</a>
       <span class="small">by <a href="http://github.com/aglemann">aglemann</a></span></h1>
 
-    <div class="description" id="game">
+    <div class="description">
       Simple minimax-derivative tic-tac-toe game in about 1K of Javascript.
+
+			<div id="game"></div>
     </div>
 
     <h2>License</h2>
@@ -78,9 +79,8 @@
     </div>
 
   </div>
-	<script type="text/javascript" charset="utf-8" src="https://github.com/aglemann/tic-tac-toe/raw/master/tic-tac-toe.js"></script>
 	<script type="text/javascript" charset="utf-8">
-		new Game(document.getElementById('game'));
+		window.addEventListener('load', function(){ new Game(document.getElementById('game')) });
 	</script>
 </body>
 </html>
