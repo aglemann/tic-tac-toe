@@ -52,8 +52,11 @@ function Game(el){
 	combos.push(c, d);
 
 	// function called for each move
-	canvas.onclick = function(e){		
-		var i = ~~(e.pageY / size) * grid + ~~(e.pageX / size), next;		
+	canvas.onclick = function(e){
+		var rect = canvas.getBoundingClientRect(), 
+			left = rect.left + doc.body.scrollLeft, 
+			top = rect.top + doc.body.scrollTop, 
+			i = ~~((e.pageY - top) / size) * grid + ~~((e.pageX - left) / size), next;		
 		if (!board[i]){
 			draw(i, 'o');
 			if (chk(0) < 0) return die('won');
