@@ -7,7 +7,7 @@
  * Licensed under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
  */
-function Game(){
+function Game(el){
 	// make everything locals so they compress better	
 	var grid = 3,
 		size = 100,
@@ -36,8 +36,8 @@ function Game(){
 		context.mT(a, b);
 		context.lT(c, d);
 	}
-	context.sk();
-	doc.body.appendChild(canvas);
+	context.sk();	
+	(el || doc.body).appendChild(canvas);
 	
 	// calculate all winning combos
 	for (i = 0, c = [], d = []; i < grid; i++){
