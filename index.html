@@ -10,20 +10,19 @@
 	<style type="text/css">
 		body {
   		margin-top: 1.0em;
-  		background-color: #f22197;
 		  font-family: "Helvetica,Arial,FreeSans";
-  		color: #000000;
+  		color: #666;
     }
     #container {
       margin: 0 auto;
       width: 700px;
     }
-		h1 { font-size: 3.8em; color: #0dde68; margin-bottom: 3px; }
+		h1 { font-size: 3.8em; color: #333; margin-bottom: 3px; }
 		h1 .small { font-size: 0.4em; }
 		h1 a { text-decoration: none }
-		h2 { font-size: 1.5em; color: #0dde68; }
-    h3 { text-align: center; color: #0dde68; }
-    a { color: #0dde68; }
+		h2 { font-size: 1.5em; color: #333; }
+    h3 { text-align: center; color: #333; }
+    a { color: #333; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
 		pre { background: #000; color: #fff; padding: 15px;}
@@ -48,16 +47,19 @@
     <h1><a href="http://github.com/aglemann/tic-tac-toe">tic-tac-toe</a>
       <span class="small">by <a href="http://github.com/aglemann">aglemann</a></span></h1>
 
-    <div class="description">
+    <div class="description" id="game">
       Simple minimax-derivative tic-tac-toe game in about 1K of Javascript.
     </div>
 
     <h2>License</h2>
 <p>MIT license</p>
 <h2>Authors</h2>
-<p>Aeron Glemann (aeron.glemann@gmail.com)<br/><br/>      </p>
+<p>Aeron Glemann (aeron.glemann@gmail.com)
+<br/>
+<br/>      </p>
 <h2>Contact</h2>
-<p>Aeron Glemann (aeron.glemann@gmail.com)<br/>      </p>
+<p>Aeron Glemann (aeron.glemann@gmail.com)
+<br/>      </p>
 
 
     <h2>Download</h2>
@@ -76,7 +78,9 @@
     </div>
 
   </div>
-
-  
+	<script type="text/javascript" charset="utf-8" src="https://github.com/aglemann/tic-tac-toe/raw/master/tic-tac-toe.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		new Game(document.getElementById('game'));
+	</script>
 </body>
 </html>
