@@ -24,20 +24,23 @@ function Game(el){
 	// make shortcuts for canvas ops
 	// http://marijnhaverbeke.nl/js1k/
 	for (i in context)
-		context[i[0] + (i[4] || '')] = context[i];
-		
+		context[i[0] + (i[4] || '')] = context[i];		
+	
 	// build the playing area	
 	canvas.height = canvas.width = grid * size;
-	context.strokeStyle = '#666';
-	context.bn();	
-	for (i = 1, g = grid - 1; i <= g * 2; i++){
-		a = b = 0, c = d = grid * size;
-		if (i <= g) a = c = i * size; // horz
-		else b = d = i * size - g * size; // vert
-		context.mT(a, b);
-		context.lT(c, d);
+	// shave a few bytes using the canvas context as the scope
+	// just can't use variables named f, r, c, s, a
+	with(context){
+		strokeStyle = '#666';
+		bn(); // beginPath
+		for (i = 1, h = grid - 1; i <= h * 2; i++){
+			j = k = 0, l = m = grid * size;
+			i <= h ? j = l = i * size // rows
+			 	: k = m = i * size - h * size; // columns
+			mT(j, k), lT(l, m); // moveTo, lineTo
+		}
+		sk(); // stroke
 	}
-	context.sk();	
 	(el || body).appendChild(canvas);
 	
 	// calculate all winning combos
@@ -84,19 +87,14 @@ function Game(el){
 
 	// method to draw shape on board
 	function draw(i, o){
-		a = i % grid * size, b = ~~(i / grid) * size, c = size / 2, d = size / 3, e = d * 2;
-		context.lineWidth = 4;
-		context.bn();  
-		if (o) // draw o
-			context.a(a + c, b + c, d / 2, 0, Math.PI * 2);
-		else{ // draw x
-			context.mT(a + d, b + d);
-			context.lT(a + e, b + e);
-			context.mT(a + d, b + e);
-			context.lT(a + e, b + d);
+		with(context){
+			x = i % grid * size, y = ~~(i / grid) * size, c = size / 2, d = size / 3, e = d * 2, lineWidth = 4;
+			bn(); // beginPath
+			o ? a(x + c, y + c, d / 2, 0, Math.PI * 2) // draw o
+				: (mT(x + d, y + d), lT(x + e, y + e), mT(x + d, y + e), lT(x + e, y + d)); // draw x
+			sk(); // stroke
+			board[i] = o || 1;
 		}
-		context.sk();
-		board[i] = o || 1;
 	}
 	
 	// negamax search with alpha-beta pruning
